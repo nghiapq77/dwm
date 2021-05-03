@@ -99,27 +99,27 @@ static const char *termcmd[]  = { TERMINAL, NULL };
 /*
  * Xresources preferences to load at startup
  */
-ResourcePref resources[] = {
-		{ "color0",		STRING,	&normbordercolor },
-		{ "color8",		STRING,	&selbordercolor },
-		{ "color0",		STRING,	&normbgcolor },
-		{ "color4",		STRING,	&normfgcolor },
-		{ "color0",		STRING,	&selfgcolor },
-		{ "color4",		STRING,	&selbgcolor },
-		{ "borderpx",		INTEGER, &borderpx },
-		{ "snap",		INTEGER, &snap },
-		{ "showbar",		INTEGER, &showbar },
-		{ "topbar",		INTEGER, &topbar },
-		{ "nmaster",		INTEGER, &nmaster },
-		{ "resizehints",	INTEGER, &resizehints },
-		{ "mfact",		FLOAT,	&mfact },
-		{ "gappih",		INTEGER, &gappih },
-		{ "gappiv",		INTEGER, &gappiv },
-		{ "gappoh",		INTEGER, &gappoh },
-		{ "gappov",		INTEGER, &gappov },
-		{ "swallowfloating",	INTEGER, &swallowfloating },
-		{ "smartgaps",		INTEGER, &smartgaps },
-};
+//ResourcePref resources[] = {
+		//{ "color0",		STRING,	&normbordercolor },
+		//{ "color8",		STRING,	&selbordercolor },
+		//{ "color0",		STRING,	&normbgcolor },
+		//{ "color4",		STRING,	&normfgcolor },
+		//{ "color0",		STRING,	&selfgcolor },
+		//{ "color4",		STRING,	&selbgcolor },
+		//{ "borderpx",		INTEGER, &borderpx },
+		//{ "snap",		INTEGER, &snap },
+		//{ "showbar",		INTEGER, &showbar },
+		//{ "topbar",		INTEGER, &topbar },
+		//{ "nmaster",		INTEGER, &nmaster },
+		//{ "resizehints",	INTEGER, &resizehints },
+		//{ "mfact",		FLOAT,	&mfact },
+		//{ "gappih",		INTEGER, &gappih },
+		//{ "gappiv",		INTEGER, &gappiv },
+		//{ "gappoh",		INTEGER, &gappoh },
+		//{ "gappov",		INTEGER, &gappov },
+		//{ "swallowfloating",	INTEGER, &swallowfloating },
+		//{ "smartgaps",		INTEGER, &smartgaps },
+//};
 
 #include <X11/XF86keysym.h>
 
@@ -169,6 +169,8 @@ static Key keys[] = {
         { MODKEY|ShiftMask,		XK_Return,	togglescratch,	{.ui = 0} },
 	{ MODKEY,			XK_b,		spawn,	        SHCMD("refbar") },
 	{ MODKEY|ShiftMask,		XK_b,		togglebar,	{0} },
+        //{ MODKEY,			XK_m,		incnmaster,     {.i = +1 } },
+	//{ MODKEY|ShiftMask,		XK_m,		incnmaster,     {.i = -1 } },
         { MODKEY,			XK_Left,	focusmon,	{.i = -1 } },
         { MODKEY|ShiftMask,		XK_Left,	tagmon,		{.i = -1 } },
         { MODKEY,			XK_Right,	focusmon,	{.i = +1 } },
