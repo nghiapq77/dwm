@@ -45,7 +45,7 @@ static Sp scratchpads[] = {
 };
 
 /* tagging */
-static const char *tags[] = { "1: ", "2: ", "3: ", "4: ", "5", "6", "7", "8", "9: " };
+static const char *tags[] = { "1: ", "2: ", "3: ", "4: ", "5: ", "6", "7", "8", "9: " };
 
 static const Rule rules[] = {
 	/* class      instance    title                 tags mask     isfloating   isterminal noswallow monitor */
@@ -82,7 +82,7 @@ static const Layout layouts[] = {
 #define STACKKEYS(MOD,ACTION) \
 	{ MOD,	XK_j,	ACTION##stack,	{.i = INC(+1) } }, \
 	{ MOD,	XK_k,	ACTION##stack,	{.i = INC(-1) } }, \
-	/*{ MOD,  XK_v,   ACTION##stack,  {.i = 0 } }, \ */
+        { MOD,  XK_v,   ACTION##stack,  {.i = 0 } }, \
 	/* { MOD, XK_grave, ACTION##stack, {.i = PREVSEL } }, \ */
 	/* { MOD, XK_a,     ACTION##stack, {.i = 1 } }, \ */
 	/* { MOD, XK_z,     ACTION##stack, {.i = 2 } }, \ */
@@ -167,10 +167,10 @@ static Key keys[] = {
 	{ MODKEY,			XK_comma,	setmfact,      	{.f = -0.05} },
         { MODKEY,			XK_Return,	spawn,		{.v = termcmd } },
         { MODKEY|ShiftMask,		XK_Return,	togglescratch,	{.ui = 0} },
+	{ MODKEY,		        XK_z,		togglebar,	{0} },
 	{ MODKEY,			XK_b,		spawn,	        SHCMD("refbar") },
 	{ MODKEY|ShiftMask,		XK_b,		togglebar,	{0} },
-        //{ MODKEY,			XK_m,		incnmaster,     {.i = +1 } },
-	//{ MODKEY|ShiftMask,		XK_m,		incnmaster,     {.i = -1 } },
+        { MODKEY,		        XK_m,		togglefullscr,	{0} },
         { MODKEY,			XK_Left,	focusmon,	{.i = -1 } },
         { MODKEY|ShiftMask,		XK_Left,	tagmon,		{.i = -1 } },
         { MODKEY,			XK_Right,	focusmon,	{.i = +1 } },
@@ -187,7 +187,6 @@ static Key keys[] = {
 	//{ MODKEY,			XK_F10,		spawn,		SHCMD("dmenuumount") },
 	{ MODKEY,			XK_space,	zoom,		{0} },
 	//{ MODKEY|ShiftMask,		XK_space,	togglefloating,	{0} },
-
 	{ 0,				XK_Print,	spawn,		SHCMD("maim $HOME/pics/pic-full-$(date '+%y%m%d-%H%M-%S').png") },
 	{ MODKEY,			XK_Print,	spawn,		SHCMD("maimpick") },
 };
