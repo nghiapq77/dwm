@@ -15,7 +15,7 @@ static const int smartgaps          = 1;        /* 1 means no outer gap when the
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
-static const char *fonts[]          = { "IBMPlexMono-Regular:size=11", "siji:pixelsize=11:antialias=true:autohint=true" };
+static const char *fonts[]          = { "IBM Plex Mono:size=11", "siji:size=9" };
 static char dmenufont[]             = "Monaco:size=10";
 static char normfgcolor[]           = "#ebdbb2";
 static char normbgcolor[]           = "#1d2021";
@@ -45,7 +45,8 @@ static Sp scratchpads[] = {
 };
 
 /* tagging */
-static const char *tags[] = { "1: ", "2: ", "3: ", "4: ", "5: ", "6", "7", "8", "9: " };
+//static const char *tags[] = { "1: ", "2: ", "3: ", "4: ", "5: ", "6", "7", "8", "9: " };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* class      instance    title                 tags mask     isfloating   isterminal noswallow monitor */
@@ -63,11 +64,15 @@ static const int resizehints = 0;    /* 1 means respect size hints in tiled resi
 #include "vanitygaps.c"
 static const Layout layouts[] = {
 	/* symbol       arrange function */
- 	{ "",	        tile },			        /* Default: Master on left, slaves on right */
-	{ "[@]",	spiral },		        /* Fibonacci spiral */
-	{ "H[]",	deck },			        /* Master on left, slaves in monocle-like mode on right */
-	{ "",	        NULL },			        /* no layout function means floating behavior */
-	{ NULL,		NULL },
+        //{ "[]=",	tile },			        // Default: Master on left, slaves on right */
+        //{ "[@]",	spiral },		        // Fibonacci spiral */
+        //{ "[D]",	deck },			        // Master on left, slaves in monocle-like mode on right */
+        //{ "><>",	NULL },			        // no layout function means floating behavior */
+        { "",	        tile },			        // Default: Master on left, slaves on right */
+        { "",	        spiral },		        // Fibonacci spiral */
+        { "",	        deck },			        // Master on left, slaves in monocle-like mode on right */
+        { "",	        NULL },			        // no layout function means floating behavior */
+        { NULL,		NULL },
 };
 
 /* key definitions */
