@@ -84,6 +84,7 @@ static char dmenumon[2] = "0";
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "$TERMINAL", NULL };
 
+#include "shift.c"
 //#include <X11/XF86keysym.h>
 static Key keys[] = {
 	/* modifier                     key             function        argument */
@@ -119,10 +120,10 @@ static Key keys[] = {
         { MODKEY|ShiftMask,		XK_f,		togglefloating,	{0} },
 	{ MODKEY,			XK_g,		incrgaps,	{.i = +1}},
 	{ MODKEY|ShiftMask,		XK_g,		incrgaps,	{.i = -1}},
-	//{ MODKEY,			XK_h,		shiftview,	{.i = -1}},
-	//{ MODKEY|ShiftMask,		XK_h,		shifttag,	{.i = -1}},
-	//{ MODKEY,			XK_l,		shiftview,	{.i = 1}},
-        { MODKEY|ShiftMask,		XK_l,		spawn,	        SHCMD("slock") },
+	{ MODKEY,		        XK_h,           shiftview,      { .i = -1 } },
+	{ MODKEY|ShiftMask,		XK_h,           shifttag,       { .i = -1 } },
+	{ MODKEY,		        XK_l,           shiftview,      { .i = +1 } },
+	{ MODKEY|ShiftMask,		XK_l,           shifttag,       { .i = +1 } },
 	/* J and K are automatically bound above in STACKEYS */
 	{ MODKEY,			XK_period,	setmfact,      	{.f = +0.05} },
 	{ MODKEY,			XK_comma,	setmfact,      	{.f = -0.05} },
