@@ -79,6 +79,9 @@ static const Layout layouts[] = {
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
+/* define status bar */
+#define STATUSBAR "dwmblocks"
+
 /* commands */
 static char dmenumon[2] = "0";
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
@@ -158,20 +161,20 @@ static Key keys[] = {
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
-	/* click                event mask              button          function        argument */
+        /* click                event mask              button          function        argument */
         //{ ClkWinTitle,          0,                      Button2,        zoom,           {0} },
-        { ClkStatusText,        0,                      Button1,        sigdwmblocks,   {.i = 1} },
-	{ ClkStatusText,        0,                      Button2,        sigdwmblocks,   {.i = 2} },
-	{ ClkStatusText,        0,                      Button3,        sigdwmblocks,   {.i = 3} },
-	{ ClkStatusText,        ShiftMask,              Button1,        sigdwmblocks,   {.i = 4} },
-	{ ClkStatusText,        ShiftMask,              Button2,        sigdwmblocks,   {.i = 5} },
-	{ ClkStatusText,        ShiftMask,              Button3,        sigdwmblocks,   {.i = 6} },
-	{ ClkClientWin,         MODKEY,                 Button1,        movemouse,      {0} },
+        { ClkStatusText,        0,                      Button1,        sigstatusbar,   {.i = 1} },
+        { ClkStatusText,        0,                      Button2,        sigstatusbar,   {.i = 2} },
+        { ClkStatusText,        0,                      Button3,        sigstatusbar,   {.i = 3} },
+        { ClkStatusText,        ShiftMask,              Button1,        sigstatusbar,   {.i = 4} },
+        { ClkStatusText,        ShiftMask,              Button2,        sigstatusbar,   {.i = 5} },
+        { ClkStatusText,        ShiftMask,              Button3,        sigstatusbar,   {.i = 6} },
+        { ClkClientWin,         MODKEY,                 Button1,        movemouse,      {0} },
         { ClkClientWin,         MODKEY|ShiftMask,       Button1,        resizemouse,    {0} },
-	//{ ClkClientWin,         MODKEY,                 Button2,        togglefloating, {0} },
-	{ ClkTagBar,            0,                      Button1,        view,           {0} },
-	{ ClkTagBar,            0,                      Button3,        toggleview,     {0} },
-	{ ClkTagBar,            MODKEY,                 Button1,        tag,            {0} },
-	{ ClkTagBar,            MODKEY,                 Button3,        toggletag,      {0} },
-	{ ClkLtSymbol,          0,                      Button1,        setlayout,      {0} },
+        //{ ClkClientWin,         MODKEY,                 Button2,        togglefloating, {0} },
+        { ClkTagBar,            0,                      Button1,        view,           {0} },
+        { ClkTagBar,            0,                      Button3,        toggleview,     {0} },
+        { ClkTagBar,            MODKEY,                 Button1,        tag,            {0} },
+        { ClkTagBar,            MODKEY,                 Button3,        toggletag,      {0} },
+        { ClkLtSymbol,          0,                      Button1,        setlayout,      {0} },
 };
