@@ -79,13 +79,16 @@ static const Layout layouts[] = {
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
+/* helper for spawning shell-less commands */
+#define SPAWN(...) { .v = (const char*[]){ __VA_ARGS__, NULL } }
+
 /* define status bar */
 #define STATUSBAR "dwmblocks"
 
 /* commands */
 static char dmenumon[2] = "0";
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "$TERMINAL", NULL };
+//static const char *termcmd[]  = { "st", NULL };
 
 #include "shift.c"
 //#include <X11/XF86keysym.h>
@@ -104,13 +107,13 @@ static Key keys[] = {
 	TAGKEYS(			XK_9,		8)
         { MODKEY,			XK_0,		view,		{.ui = ~0 } },
 	//{ MODKEY|ShiftMask,		XK_0,		tag,		{.ui = ~0 } },
-	{ MODKEY,		        XK_BackSpace,	spawn,		SHCMD("sysact") },
+	{ MODKEY,		        XK_BackSpace,	spawn,		SPAWN("sysact") },
 	{ MODKEY,			XK_Tab,		view,		{0} },
 	//{ MODKEY,			XK_q,		killclient,	{0} },
         { MODKEY,			XK_w,		spawn,		SHCMD("$BROWSER") },
-        { MODKEY|ShiftMask,		XK_w,		spawn,		SHCMD("$TERMINAL -e nmtui") },
+        { MODKEY|ShiftMask,		XK_w,		spawn,		SPAWN("st", "-e", "nmtui") },
 	{ MODKEY,			XK_e,		spawn,		SHCMD("toggle_lang; pkill -RTMIN+11 dwmblocks") },
-        { MODKEY,			XK_r,		spawn,		SHCMD("st -e ranger") },
+        { MODKEY,			XK_r,		spawn,		SPAWN("st", "-e", "ranger") },
 	{ MODKEY,			XK_t,		setlayout,	{.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,		XK_t,		setlayout,	{.v = &layouts[3]} },
 	{ MODKEY,			XK_y,		setlayout,	{.v = &layouts[1]} },
@@ -130,11 +133,11 @@ static Key keys[] = {
 	/* J and K are automatically bound above in STACKEYS */
 	{ MODKEY,			XK_period,	setmfact,      	{.f = +0.05} },
 	{ MODKEY,			XK_comma,	setmfact,      	{.f = -0.05} },
-        { MODKEY,			XK_Return,	spawn,		{.v = termcmd } },
+        { MODKEY,			XK_Return,	spawn,		SPAWN("st") },
         { MODKEY|ShiftMask,		XK_Return,	togglescratch,	{.ui = 0} },
 	//{ MODKEY,		        XK_z,		togglebar,	{0} },
 	{ MODKEY|ShiftMask,		XK_c,		killclient,	{0} },
-	{ MODKEY,			XK_b,		spawn,	        SHCMD("refbar") },
+	{ MODKEY,			XK_b,		spawn,	        SPAWN("refbar") },
 	{ MODKEY|ShiftMask,		XK_b,		togglebar,	{0} },
         //{ MODKEY|ShiftMask,		XK_n,		spawn,	        SHCMD("dunstctl set-paused toggle") },
         { MODKEY,		        XK_m,		togglefullscr,	{0} },
@@ -142,7 +145,7 @@ static Key keys[] = {
         { MODKEY|ShiftMask,		XK_Left,	tagmon,		{.i = -1 } },
         { MODKEY,			XK_Right,	focusmon,	{.i = +1 } },
         { MODKEY|ShiftMask,		XK_Right,	tagmon,		{.i = +1 } },
-	{ MODKEY,			XK_Insert,	spawn,		SHCMD("notify-send \"📋 Clipboard contents:\" \"$(xclip -o -selection clipboard)\"") },
+	//{ MODKEY,			XK_Insert,	spawn,		SPAWN("notify-send \"📋 Clipboard contents:\" \"$(xclip -o -selection clipboard)\"") },
 	//{ MODKEY,			XK_F1,		spawn,		SHCMD("groff -mom /usr/local/share/dwm/larbs.mom -Tpdf | zathura -") },
 	//{ MODKEY,			XK_F2,		quit,		{1} },
 	//{ MODKEY,			XK_F3,		spawn,		SHCMD("displayselect") },
@@ -155,7 +158,7 @@ static Key keys[] = {
 	{ MODKEY,			XK_space,	zoom,		{0} },
 	//{ MODKEY|ShiftMask,		XK_space,	togglefloating,	{0} },
 	{ 0,				XK_Print,	spawn,		SHCMD("maim $HOME/pics/pic-full-$(date '+%y%m%d-%H%M-%S').png") },
-	{ MODKEY,			XK_Print,	spawn,		SHCMD("maimpick") },
+	{ MODKEY,			XK_Print,	spawn,		SPAWN("maimpick") },
 };
 
 /* button definitions */
