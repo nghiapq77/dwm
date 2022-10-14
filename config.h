@@ -8,8 +8,9 @@ static const unsigned int gappov    = 10; // vert outer gap between windows and 
 static const int smartgaps          = 1;  // 1 means no outer gap when there is only one window
 static const int showbar            = 1;  // 0 means no bar
 static const int topbar             = 1;  // 0 means bottom bar
-static const char *fonts[]          = { "IBM Plex Mono:size=10.6", "siji:size=9" };
-static char dmenufont[]             = "Monaco:size=10";
+static const char *fonts[]          = { "IBM Plex Mono:pixelsize=18:antialias=true:autohint=true", "siji:size=12" };
+static char dmenufont[]             = "IBM Plex Mono:pixelsize=18:antialias=true:autohint=true";
+static char spfont[]                = "Monaco:size=14:antialias=true:autohint=true";
 static char normfgcolor[]           = "#ebdbb2";
 static char normbgcolor[]           = "#1d2021";
 static char normbordercolor[]       = "#444444";
@@ -32,7 +33,7 @@ typedef struct {
         const char *name;
         const void *cmd;
 } Sp;
-const char *spcmd1[] = {"st", "-n", "spterm", "-g", "82x24", NULL };
+const char *spcmd1[] = {"st", "-n", "spterm", "-g", "80x24", "-f", spfont, NULL };
 static Sp scratchpads[] = {
 	/* name          cmd  */
         {"spterm",    spcmd1},
@@ -86,13 +87,12 @@ static const Layout layouts[] = {
 #define STATUSBAR "dwmblocks"
 
 /* commands */
-static char dmenumon[2] = "0";
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 //static const char *termcmd[]  = { "st", NULL };
 
 #include "shift.c"
 //#include <X11/XF86keysym.h>
-static Key keys[] = {
+static const Key keys[] = {
 	/* modifier                     key             function        argument */
 	STACKKEYS(MODKEY,                               focus)
 	STACKKEYS(MODKEY|ShiftMask,                     push)
@@ -126,9 +126,9 @@ static Key keys[] = {
         { MODKEY|ShiftMask,		XK_f,		togglefloating,	{0} },
 	{ MODKEY,			XK_g,		incrgaps,	{.i = +1}},
 	{ MODKEY|ShiftMask,		XK_g,		incrgaps,	{.i = -1}},
-	{ MODKEY,		        XK_h,           shiftview,      { .i = -1 } },
+	//{ MODKEY,		        XK_h,           shiftview,      { .i = -1 } },
 	{ MODKEY|ShiftMask,		XK_h,           shifttag,       { .i = -1 } },
-	{ MODKEY,		        XK_l,           shiftview,      { .i = +1 } },
+	//{ MODKEY,		        XK_l,           shiftview,      { .i = +1 } },
 	{ MODKEY|ShiftMask,		XK_l,           shifttag,       { .i = +1 } },
 	/* J and K are automatically bound above in STACKEYS */
 	{ MODKEY,			XK_period,	setmfact,      	{.f = +0.05} },
@@ -157,13 +157,13 @@ static Key keys[] = {
 	//{ MODKEY,			XK_F10,		spawn,		SHCMD("dmenuumount") },
 	{ MODKEY,			XK_space,	zoom,		{0} },
 	//{ MODKEY|ShiftMask,		XK_space,	togglefloating,	{0} },
-	{ 0,				XK_Print,	spawn,		SHCMD("maim $HOME/pics/pic-full-$(date '+%y%m%d-%H%M-%S').png") },
-	{ MODKEY,			XK_Print,	spawn,		SPAWN("maimpick") },
+        //{ 0,				XK_Print,	spawn,		SHCMD("maim $HOME/pics/pic-full-$(date '+%y%m%d-%H%M-%S').png") },
+        //{ MODKEY,			XK_Print,	spawn,		SPAWN("maimpick") },
 };
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
-static Button buttons[] = {
+static const Button buttons[] = {
         /* click                event mask              button          function        argument */
         //{ ClkWinTitle,          0,                      Button2,        zoom,           {0} },
         { ClkStatusText,        0,                      Button1,        sigstatusbar,   {.i = 1} },
