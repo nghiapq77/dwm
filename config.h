@@ -99,6 +99,8 @@ static const Key keys[] = {
     { MODKEY|ShiftMask,            XK_t,            setlayout,         {.v = &layouts[1]} },
     { MODKEY|ALTKEY,               XK_t,            setlayout,         {.v = &layouts[2]} },
     { MODKEY,                      XK_d,            spawn,             {.v = dmenucmd} },
+    { MODKEY,                      XK_f,            togglefullscr,     {0} },
+    { MODKEY|ShiftMask,            XK_f,            togglefloating,    {0} },
     { MODKEY,                      XK_g,            incrgaps,          {.i = +1} },
     { MODKEY|ShiftMask,            XK_g,            incrgaps,          {.i = -1} },
     { MODKEY|ALTKEY,               XK_g,            defaultgaps,       {0} },
