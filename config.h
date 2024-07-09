@@ -24,11 +24,23 @@ static const char *colors[][3]      = {
     [SchemeInfoSel]  = { "#f9f5d7",    "#1d2021",    "#000000" }, // Infobar middle selected {text,background,not used but cannot be empty}
 };
 
+/* scratchpads */
+typedef struct {
+    const char *name;
+    const void *cmd;
+} Sp;
+const char *spcmd1[] = { TERMINAL, "-n", "spterm", "-g", "80x24", "-f", "Monaco:size=14:antialias=true:autohint=true", NULL };
+static Sp scratchpads[] = {
+    /* name       cmd */
+    {"spterm",    spcmd1},
+};
+
 /* tagging */
 static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
     /* class    instance     title                    tags mask    isfloating    monitor */
+    { NULL,     "spterm",    NULL,                    SPTAG(0),    1,            -1 },
     { NULL,     NULL,        "Picture-in-Picture",    0,           1,            -1 },
 };
 
@@ -93,6 +105,7 @@ static const Key keys[] = {
     { MODKEY,                      XK_Escape,       spawn,             SPAWN("sysact") },
     { MODKEY,                      XK_BackSpace,    spawn,             SPAWN("sysact") },
     { MODKEY,                      XK_Return,       spawn,             {.v = termcmd} },
+    { MODKEY|ShiftMask,            XK_Return,       togglescratch,     {.ui = 0} },
     { MODKEY|ShiftMask,            XK_q,            quit,              {0} },
     { MODKEY,                      XK_w,            spawn,             SPAWN(BROWSER) },
     { MODKEY,                      XK_t,            setlayout,         {.v = &layouts[0]} },
