@@ -109,6 +109,11 @@ typedef struct {
 } Key;
 
 typedef struct {
+	unsigned int mod;
+	KeySym keysym;
+} KeyBinding;
+
+typedef struct {
 	const char *symbol;
 	void (*arrange)(Monitor *);
 } Layout;
@@ -201,6 +206,7 @@ static void restack(Monitor *m);
 static void run(void);
 static void scan(void);
 static int sendevent(Client *c, Atom proto);
+static void sendkeyevent(const Arg *arg);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
@@ -1598,6 +1604,47 @@ sendevent(Client *c, Atom proto)
 		XSendEvent(dpy, c->win, False, NoEventMask, &ev);
 	}
 	return exists;
+}
+
+XKeyEvent
+createkeyevent(Display *display, Window win, Window rootWindow, int type, KeyBinding *keyBinding)
+{
+	int keysym = keyBinding->keysym;
+	unsigned int modifier = keyBinding->mod;
+
+	XKeyEvent event;
+	event.type = type;
+	event.display = display;
+	event.window = win;
+	event.root = rootWindow;
+	event.subwindow = None;
+	event.time = CurrentTime;
+	event.x = 1;
+	event.y = 1;
+	event.x_root = 1;
+	event.y_root = 1;
+	event.same_screen = True;
+	event.keycode = XKeysymToKeycode(display, keysym);
+	event.state = modifier;
+
+	return event;
+}
+
+void sendkeyevent(const Arg *arg)
+{
+	Window rootWindow = XDefaultRootWindow(dpy);
+
+	Window focusedWindow;
+	int revert;
+	XGetInputFocus(dpy, &focusedWindow, &revert);
+
+	KeyBinding *keyBinding = (KeyBinding *)arg->v;
+
+	XKeyEvent event = createkeyevent(dpy, focusedWindow, rootWindow, KeyPress, keyBinding);
+	XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent *)&event);
+
+	event = createkeyevent(dpy, focusedWindow, rootWindow, KeyRelease, keyBinding);
+	XSendEvent(event.display, event.window, True, KeyReleaseMask, (XEvent *)&event);
 }
 
 void

@@ -69,9 +69,12 @@ static const Layout layouts[] = {
     { MODKEY|ControlMask,    KEY,    toggletag,     {.ui = 1 << TAG} },
 
 #define STACKKEYS(MOD,ACTION) \
-    { MOD,    XK_j,      ACTION##stack,    {.i = INC(+1)} }, \
-    { MOD,    XK_k,      ACTION##stack,    {.i = INC(-1)} }, \
+    { MOD,    XK_l,      ACTION##stack,    {.i = INC(+1)} }, \
+    { MOD,    XK_h,      ACTION##stack,    {.i = INC(-1)} }, \
     { MOD,    XK_Tab,    ACTION##stack,    {.i = PREVSEL} }, \
+
+#define KEYEVENT(SRC_MOD,SRC_KEY,DST_MOD,DST_KEY) \
+    { SRC_MOD, SRC_KEY, sendkeyevent, { .v = &(const KeyBinding){ DST_MOD, DST_KEY } } },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
@@ -100,6 +103,13 @@ static const Key keys[] = {
     TAGKEYS(                       XK_7,                               6)
     TAGKEYS(                       XK_8,                               7)
     TAGKEYS(                       XK_9,                               8)
+    KEYEVENT(MODKEY,               XK_a,                               0, XK_Return)
+    KEYEVENT(MODKEY,               XK_k,                               0, XK_Up)
+    KEYEVENT(MODKEY,               XK_j,                               0, XK_Down)
+    KEYEVENT(MODKEY,               XK_s,                               0, XK_Up)
+    KEYEVENT(MODKEY,               XK_x,                               0, XK_Down)
+    KEYEVENT(MODKEY,               XK_z,                               0, XK_Left)
+    KEYEVENT(MODKEY,               XK_c,                               0, XK_Right)
     { MODKEY,                      XK_0,            view,              {.ui = ~0} },
     { MODKEY|ShiftMask,            XK_0,            tag,               {.ui = ~0} },
     { MODKEY,                      XK_Escape,       spawn,             SPAWN("sysact") },
@@ -118,7 +128,7 @@ static const Key keys[] = {
     { MODKEY|ShiftMask,            XK_g,            incrgaps,          {.i = -1} },
     { MODKEY|ALTKEY,               XK_g,            defaultgaps,       {0} },
     { MODKEY|ControlMask,          XK_g,            togglegaps,        {0} },
-    /* j and k are automatically bound above in STACKEYS */
+    /* h and l are automatically bound above in STACKEYS */
     { MODKEY|ShiftMask,            XK_c,            killclient,        {0} },
     { MODKEY|ShiftMask,            XK_b,            togglebar,         {0} },
     { MODKEY|ShiftMask,            XK_space,        zoom,              {0} },
