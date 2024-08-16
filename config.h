@@ -62,19 +62,27 @@ static const Layout layouts[] = {
 #define MODKEY Mod4Mask // Super key
 #define ALTKEY Mod1Mask // Alt key
 
+#define KEY(MOD,KEY,FUNC,ARG) \
+    &((Keychord){1, {{MOD, KEY}}, FUNC, ARG}),
+
+#define KEYCHORD(CHORD,KEY,FUNC,ARG) \
+    &((Keychord){2, {{MODKEY, CHORD}, {0, KEY}}, FUNC, ARG}),
+
 #define TAGKEYS(KEY,TAG) \
-    { MODKEY,                KEY,    view,          {.ui = 1 << TAG} }, \
-    { MODKEY|ALTKEY,         KEY,    toggleview,    {.ui = 1 << TAG} }, \
-    { MODKEY|ShiftMask,      KEY,    tag,           {.ui = 1 << TAG} }, \
-    { MODKEY|ControlMask,    KEY,    toggletag,     {.ui = 1 << TAG} },
+    &((Keychord){1, {{MODKEY,             KEY}},    view,          {.ui = 1 << TAG}}), \
+    &((Keychord){1, {{MODKEY|ALTKEY,      KEY}},    toggleview,    {.ui = 1 << TAG}}), \
+    &((Keychord){1, {{MODKEY|ShiftMask,   KEY}},    tag,           {.ui = 1 << TAG}}), \
+    &((Keychord){1, {{MODKEY|ControlMask, KEY}},    toggletag,     {.ui = 1 << TAG}}),
 
 #define STACKKEYS(MOD,ACTION) \
-    { MOD,    XK_l,      ACTION##stack,    {.i = INC(+1)} }, \
-    { MOD,    XK_h,      ACTION##stack,    {.i = INC(-1)} }, \
-    { MOD,    XK_Tab,    ACTION##stack,    {.i = PREVSEL} }, \
+    &((Keychord){1, {{MOD|ALTKEY, XK_j}},      ACTION##stack,    {.i = INC(+1)}}), \
+    &((Keychord){1, {{MOD|ALTKEY, XK_k}},      ACTION##stack,    {.i = INC(-1)}}), \
+    &((Keychord){1, {{MOD, XK_semicolon}},     ACTION##stack,    {.i = INC(+1)}}), \
+    &((Keychord){1, {{MOD, XK_apostrophe}},    ACTION##stack,    {.i = INC(-1)}}), \
+    &((Keychord){1, {{MOD, XK_Tab}},           ACTION##stack,    {.i = PREVSEL}}),
 
 #define KEYEVENT(SRC_MOD,SRC_KEY,DST_MOD,DST_KEY) \
-    { SRC_MOD, SRC_KEY, sendkeyevent, { .v = &(const KeyBinding){ DST_MOD, DST_KEY } } },
+    &((Keychord){1, {{SRC_MOD, SRC_KEY}}, sendkeyevent, {.v = &(const KeyBinding){DST_MOD, DST_KEY}}}),
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
@@ -90,54 +98,103 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, NULL };
 static const char *termcmd[]  = { TERMINAL, NULL };
 
-static const Key keys[] = {
-    /* modifier                    key              function           argument */
-    STACKKEYS(MODKEY,                               focus)
-    STACKKEYS(MODKEY|ShiftMask,                     push)
-    TAGKEYS(                       XK_1,                               0)
-    TAGKEYS(                       XK_2,                               1)
-    TAGKEYS(                       XK_3,                               2)
-    TAGKEYS(                       XK_4,                               3)
-    TAGKEYS(                       XK_5,                               4)
-    TAGKEYS(                       XK_6,                               5)
-    TAGKEYS(                       XK_7,                               6)
-    TAGKEYS(                       XK_8,                               7)
-    TAGKEYS(                       XK_9,                               8)
-    KEYEVENT(MODKEY,               XK_a,                               0, XK_Return)
-    KEYEVENT(MODKEY,               XK_k,                               0, XK_Up)
-    KEYEVENT(MODKEY,               XK_j,                               0, XK_Down)
-    KEYEVENT(MODKEY,               XK_s,                               0, XK_Up)
-    KEYEVENT(MODKEY,               XK_x,                               0, XK_Down)
-    KEYEVENT(MODKEY,               XK_z,                               0, XK_Left)
-    KEYEVENT(MODKEY,               XK_c,                               0, XK_Right)
-    { MODKEY,                      XK_0,            view,              {.ui = ~0} },
-    { MODKEY|ShiftMask,            XK_0,            tag,               {.ui = ~0} },
-    { MODKEY,                      XK_Escape,       spawn,             SPAWN("sysact") },
-    { MODKEY,                      XK_BackSpace,    spawn,             SPAWN("sysact") },
-    { MODKEY,                      XK_Return,       spawn,             {.v = termcmd} },
-    { MODKEY|ShiftMask,            XK_Return,       togglescratch,     {.ui = 0} },
-    { MODKEY|ShiftMask,            XK_q,            quit,              {0} },
-    { MODKEY,                      XK_w,            spawn,             SPAWN(BROWSER) },
-    { MODKEY,                      XK_t,            setlayout,         {.v = &layouts[0]} },
-    { MODKEY|ShiftMask,            XK_t,            setlayout,         {.v = &layouts[1]} },
-    { MODKEY|ALTKEY,               XK_t,            setlayout,         {.v = &layouts[2]} },
-    { MODKEY,                      XK_d,            spawn,             {.v = dmenucmd} },
-    { MODKEY,                      XK_f,            togglefullscr,     {0} },
-    { MODKEY|ShiftMask,            XK_f,            togglefloating,    {0} },
-    { MODKEY,                      XK_g,            incrgaps,          {.i = +1} },
-    { MODKEY|ShiftMask,            XK_g,            incrgaps,          {.i = -1} },
-    { MODKEY|ALTKEY,               XK_g,            defaultgaps,       {0} },
-    { MODKEY|ControlMask,          XK_g,            togglegaps,        {0} },
-    /* h and l are automatically bound above in STACKEYS */
-    { MODKEY|ShiftMask,            XK_c,            killclient,        {0} },
-    { MODKEY|ShiftMask,            XK_b,            togglebar,         {0} },
-    { MODKEY|ShiftMask,            XK_space,        zoom,              {0} },
-    { MODKEY,                      XK_comma,        setmfact,          {.f = -0.05} },
-    { MODKEY,                      XK_period,       setmfact,          {.f = +0.05} },
-    { MODKEY,                      XK_Left,         focusmon,          {.i = -1} },
-    { MODKEY|ShiftMask,            XK_Left,         tagmon,            {.i = -1} },
-    { MODKEY,                      XK_Right,        focusmon,          {.i = +1} },
-    { MODKEY|ShiftMask,            XK_Right,        tagmon,            {.i = +1} },
+#include <X11/XF86keysym.h>
+static Keychord *keychords[] = {
+    /* key                                                     function          argument */
+    TAGKEYS(XK_1,                                                                0)
+    TAGKEYS(XK_2,                                                                1)
+    TAGKEYS(XK_3,                                                                2)
+    TAGKEYS(XK_4,                                                                3)
+    TAGKEYS(XK_5,                                                                4)
+    TAGKEYS(XK_6,                                                                5)
+    TAGKEYS(XK_7,                                                                6)
+    TAGKEYS(XK_8,                                                                7)
+    TAGKEYS(XK_9,                                                                8)
+
+    STACKKEYS(MODKEY,                                          focus)
+    STACKKEYS(MODKEY|ShiftMask,                                push)
+
+    KEYEVENT(MODKEY,              XK_a,                                          0, XK_Return)
+    KEYEVENT(MODKEY,              XK_k,                                          0, XK_Up)
+    KEYEVENT(MODKEY,              XK_j,                                          0, XK_Down)
+    KEYEVENT(MODKEY,              XK_h,                                          0, XK_Left)
+    KEYEVENT(MODKEY,              XK_l,                                          0, XK_Right)
+    KEYEVENT(MODKEY,              XK_s,                                          0, XK_Up)
+    KEYEVENT(MODKEY,              XK_x,                                          0, XK_Down)
+    KEYEVENT(MODKEY,              XK_z,                                          0, XK_Left)
+    KEYEVENT(MODKEY,              XK_c,                                          0, XK_Right)
+
+    KEY(MODKEY,                   XK_grave,                    view,             {0})
+    KEY(MODKEY,                   XK_0,                        view,             {.ui = ~0})
+    KEY(MODKEY|ShiftMask,         XK_0,                        tag,              {.ui = ~0})
+    KEY(MODKEY,                   XK_equal,                    spawn,            SPAWN("dmenu_calc"))
+    KEY(MODKEY,                   XK_BackSpace,                spawn,            SPAWN("sysact"))
+    KEY(MODKEY,                   XK_q,                        spawn,            SPAWN("defapp"))
+    KEY(MODKEY|ShiftMask,         XK_q,                        quit,             {0})
+    KEY(MODKEY|ALTKEY,            XK_q,                        quit,             {1})
+    KEY(MODKEY,                   XK_w,                        spawn,            SPAWN(BROWSER))
+    KEY(MODKEY,                   XK_e,                        spawn,            SHCMD("toggle_lang; pkill -39 dwmblocks"))
+    KEY(MODKEY,                   XK_r,                        spawn,            SPAWN(TERMINAL, "-n", "lf", "-e", "lftm"))
+    KEY(MODKEY,                   XK_t,                        setlayout,        {.v = &layouts[0]})
+    KEY(MODKEY|ShiftMask,         XK_t,                        setlayout,        {.v = &layouts[1]})
+    KEY(MODKEY|ALTKEY,            XK_t,                        setlayout,        {.v = &layouts[2]})
+    KEY(MODKEY,                   XK_p,                        spawn,            SPAWN("dmenu_passmenu"))
+    KEY(MODKEY|ShiftMask,         XK_p,                        spawn,            SPAWN("dmenu_passmenu", "--type"))
+    KEY(MODKEY,                   XK_backslash,                view,             {0})
+    KEY(MODKEY,                   XK_d,                        spawn,            {.v = dmenucmd})
+    KEY(MODKEY,                   XK_f,                        togglefullscr,    {0})
+    KEY(MODKEY|ShiftMask,         XK_f,                        togglefloating,   {0})
+    KEY(MODKEY,                   XK_g,                        incrgaps,         {.i = +1})
+    KEY(MODKEY|ShiftMask,         XK_g,                        incrgaps,         {.i = -1})
+    KEY(MODKEY|ALTKEY,            XK_g,                        defaultgaps,      {0})
+    KEY(MODKEY|ControlMask,       XK_g,                        togglegaps,       {0})
+    KEY(MODKEY,                   XK_Return,                   spawn,            {.v = termcmd})
+    KEY(MODKEY|ShiftMask,         XK_Return,                   togglescratch,    {.ui = 0})
+    KEY(MODKEY|ShiftMask,         XK_c,                        killclient,       {0})
+    KEY(MODKEY,                   XK_b,                        spawn,            SHCMD("refbar"))
+    KEY(MODKEY|ShiftMask,         XK_b,                        togglebar,        {0})
+    KEY(MODKEY,                   XK_n,                        spawn,            SPAWN("toggle_redshift"))
+    KEY(MODKEY|ShiftMask,         XK_space,                    zoom,             {0})
+    KEY(ControlMask,              XK_space,                    spawn,            SHCMD("dunstctl close"))
+    KEY(ControlMask|ShiftMask,    XK_space,                    spawn,            SHCMD("dunstctl close-all"))
+    KEY(MODKEY,                   XK_comma,                    setmfact,         {.f = -0.05})
+    KEY(MODKEY,                   XK_period,                   setmfact,         {.f = +0.05})
+    KEY(0,                        XK_Print,                    spawn,            SPAWN("dmenu_maimpick"))
+    KEY(MODKEY,                   XK_Print,                    spawn,            SHCMD("maim -s | xclip -selection clipboard -t image/png"))
+    KEY(ALTKEY,                   XK_Print,                    spawn,            SHCMD("maim ~/pics/pic-full-$(date '+%y%m%d-%H%M-%S').png"))
+    KEY(MODKEY,                   XK_Left,                     focusmon,         {.i = -1})
+    KEY(MODKEY|ShiftMask,         XK_Left,                     tagmon,           {.i = -1})
+    KEY(MODKEY,                   XK_Right,                    focusmon,         {.i = +1})
+    KEY(MODKEY|ShiftMask,         XK_Right,                    tagmon,           {.i = +1})
+    KEY(MODKEY,                   XK_Escape,                   spawn,            SPAWN("sysact"))
+    KEY(0,                        XF86XK_AudioMute,            spawn,            SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; pkill -38 dwmblocks && notify-send -u low -t 1000 -h string:x-dunst-stack-tag:volume -h int:value:$(get-volume percent) \"Audio: $(get-volume)\""))
+    KEY(0,                        XF86XK_AudioLowerVolume,     spawn,            SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- -l 1.5; pkill -38 dwmblocks && notify-send -u low -t 1000 -h string:x-dunst-stack-tag:volume -h int:value:$(get-volume percent) \"Audio: $(get-volume)\""))
+    KEY(MODKEY,                   XF86XK_AudioLowerVolume,     spawn,            SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 25%- -l 1.5; pkill -38 dwmblocks && notify-send -u low -t 1000 -h string:x-dunst-stack-tag:volume -h int:value:$(get-volume percent) \"Audio: $(get-volume)\""))
+    KEY(0,                        XF86XK_AudioRaiseVolume,     spawn,            SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ -l 1.5; pkill -38 dwmblocks && notify-send -u low -t 1000 -h string:x-dunst-stack-tag:volume -h int:value:$(get-volume percent) \"Audio: $(get-volume)\""))
+    KEY(MODKEY,                   XF86XK_AudioRaiseVolume,     spawn,            SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 25%+ -l 1.5; pkill -38 dwmblocks && notify-send -u low -t 1000 -h string:x-dunst-stack-tag:volume -h int:value:$(get-volume percent) \"Audio: $(get-volume)\""))
+    KEY(0,                        XF86XK_AudioMicMute,         spawn,            SPAWN("bluetooth_quicktoggle"))
+    KEY(MODKEY,                   XF86XK_AudioMicMute,         spawn,            SPAWN("dmenu_bluetooth"))
+    KEY(0,                        XF86XK_MonBrightnessDown,    spawn,            SHCMD("brightness -dec 10 && notify-send -u low -t 1000 -h string:x-dunst-stack-tag:brightness -h int:value:$(brightness -get) \"Brightness: $(brightness -get)%\""))
+    KEY(MODKEY,                   XF86XK_MonBrightnessDown,    spawn,            SHCMD("brightness -dec 25 && notify-send -u low -t 1000 -h string:x-dunst-stack-tag:brightness -h int:value:$(brightness -get) \"Brightness: $(brightness -get)%\""))
+    KEY(0,                        XF86XK_MonBrightnessUp,      spawn,            SHCMD("brightness -inc 10 && notify-send -u low -t 1000 -h string:x-dunst-stack-tag:brightness -h int:value:$(brightness -get) \"Brightness: $(brightness -get)%\""))
+    KEY(MODKEY,                   XF86XK_MonBrightnessUp,      spawn,            SHCMD("brightness -inc 25 && notify-send -u low -t 1000 -h string:x-dunst-stack-tag:brightness -h int:value:$(brightness -get) \"Brightness: $(brightness -get)%\""))
+    KEY(0,                        XF86XK_Display,              spawn,            SPAWN("toggle_hdmi"))
+    KEY(0,                        XF86XK_WLAN,                 spawn,            SHCMD("notify-send -h string:x-dunst-stack-tag:wlan 'WLAN' \"$([ \"$(cat /sys/class/net/w*/operstate 2>/dev/null)\" = 'up' ] && echo 'Off' || echo 'On')\"; sleep 2.5s && pkill -44 dwmblocks"))
+    KEY(0,                        XF86XK_Tools,                spawn,            SPAWN("toggle_touchpad"))
+    KEY(0,                        XF86XK_Bluetooth,            spawn,            SHCMD("notify-send -h string:x-dunst-stack-tag:bluetooth 'Bluetooth' \"$([ -f \"$XDG_CACHE_HOME/.bluetooth_on\" ] && echo 'Turning Off' || echo 'Turning On')\" && bluetooth_refresh"))
+    KEY(0,                        XF86XK_Launch1,              spawn,            SHCMD("toggle_lang; pkill -39 dwmblocks"))
+    KEY(0,                        XF86XK_Favorites,            togglescratch,    {.ui = 0})
+    KEY(MODKEY,                   XF86XK_Favorites,            spawn,            SPAWN("dmenu_battery"))
+    KEY(0,                        XK_Insert,                   spawn,            SHCMD("xdotool type $(grep -v '^#' ~/.local/share/bm | dmenu -p \"Bookmarks:\" -i -l 20 | cut -d' ' -f1)"))
+
+    KEYCHORD(XK_space,            XK_w,                        spawn,            SPAWN("dmenu_wifi"))
+    KEYCHORD(XK_space,            XK_t,                        spawn,            SPAWN(TERMINAL, "-e", "btop"))
+    KEYCHORD(XK_space,            XK_a,                        spawn,            SPAWN("pavucontrol"))
+    KEYCHORD(XK_space,            XK_f,                        spawn,            SPAWN(TERMINAL, "-n", "lf", "-e", "lftm"))
+    KEYCHORD(XK_space,            XK_c,                        spawn,            SPAWN(TERMINAL, "-e", "calcurse"))
+    KEYCHORD(XK_space,            XK_n,                        spawn,            SPAWN("dmenu_noti"))
+    KEYCHORD(XK_space,            XK_m,                        spawn,            SPAWN(TERMINAL, "-e", "neomutt"))
+    KEYCHORD(XK_space,            XK_space,                    spawn,            SPAWN(TERMINAL, "-n", "tm", "-e", "tm"))
 };
 
 /* button definitions */
