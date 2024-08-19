@@ -144,6 +144,8 @@ static Keychord *keychords[] = {
     KEY(MODKEY|ALTKEY,            XK_t,                        setlayout,        {.v = &layouts[2]})
     KEY(MODKEY,                   XK_p,                        spawn,            SPAWN("dmenu_passmenu"))
     KEY(MODKEY|ShiftMask,         XK_p,                        spawn,            SPAWN("dmenu_passmenu", "--type"))
+    KEY(MODKEY,                   XK_bracketleft,              shiftview,        {.i = -1})
+    KEY(MODKEY,                   XK_bracketright,             shiftview,        {.i = +1})
     KEY(MODKEY,                   XK_backslash,                view,             {0})
     KEY(MODKEY,                   XK_d,                        spawn,            {.v = dmenucmd})
     KEY(MODKEY,                   XK_f,                        togglefullscr,    {0})
