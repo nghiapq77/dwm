@@ -40,10 +40,11 @@ static const char *tags[] = { "", "", "", "", "", "", "", "
 
 static const Rule rules[] = {
     /* class              instance     title                    tags mask    isfloating    monitor */
-    { "LibreWolf",        NULL,        NULL,                    1,           0,            -1 },
+    { "librewolf",        NULL,        NULL,                    1,           0,            -1 },
     { "st-256color",      "tm",        NULL,                    1 << 1,      0,            -1 },
     { "Brave-browser",    NULL,        NULL,                    1 << 2,      0,            -1 },
     { "st-256color",      "lf",        NULL,                    1 << 3,      0,            -1 },
+    { "Rustdesk",         NULL,        NULL,                    1 << 8,      0,            -1 },
     { NULL,               "spterm",    NULL,                    SPTAG(0),    1,            -1 },
     { NULL,               NULL,        "Picture-in-Picture",    0,           1,            -1 },
 };
